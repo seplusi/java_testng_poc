@@ -1,29 +1,20 @@
 package pages;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
-import java.time.Duration;
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class LoginPage {
-    WebDriver driver;
-    WebDriverWait waitDriver;
-    WebElement titleElement;
+import resources.objects.CommonPage;
+
+public class LoginPage extends CommonPage{
+    //private final WebElement titleElement, usernameInput, passwordInput;
+    //private final WebElement usernameLabel, passwordLabel, loginButton;
 
     public LoginPage(WebDriver driver) {
-        this.driver = driver;
-        this.waitDriver = new WebDriverWait(driver, Duration.ofSeconds(20));
-
-        titleElement = waitDriver.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h5")));
+        super(driver);
     }
 
-    public String getTitleText() {
-        return titleElement.getText();
+    public String getLogoText() {
+        return waitDriver.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(prop.getProperty("logoButton").split("\\|")[0]))).getText();
     }
-
-
 }

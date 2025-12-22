@@ -1,0 +1,16 @@
+logoButton = div[id="primary-nav"] a[class="logo"]|load
+tagLineText = div[id="primary-nav"] span[class*="tagline"]|load
+supportDropdownButton = a[id="action-menu-support"]|load
+applyDropdownButton = a[id="action-menu-apply"]|load
+searchButton = li[data-target="#modal-search"]|load
+searchElementImg = li[data-target="#modal-search"] > svg|load
+loginButton = li[class=""] > a[href="/account/login"]|load
+searchDropdownButton = li[class="dropdown "] a[id="menu-journals-articles"]|load
+journalsSearchOption = ul[aria-label="Search"] a[href="/search/journals"]
+articlesSearchOption = ul[aria-label="Search"] a[href="/search/articles"]
+docsDropdownButton = a[id="menu-documentation"]|load
+apiDocOption = a[href="/docs/api/"]
+oaiDocOption = a[href="/docs/oai-pmh/"]
+aboutDropdownButton = a[id="menu-about"]|load
+aboutAboutOption = ul[aria-label="About"] a[href="/about/"]
+findHeader1 = section[class="homepage__search"] h1|load
