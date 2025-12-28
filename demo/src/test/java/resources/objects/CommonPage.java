@@ -22,12 +22,14 @@ public class CommonPage {
     public WebDriver driver;
     public WebDriverWait waitDriver;
     public Properties prop;
+    public int timeout;
 
     public CommonPage(WebDriver driver) {
         this.driver = driver;
         waitDriver = new WebDriverWait(this.driver, Duration.ofSeconds(20));
         prop = loadProperties();
         waitForElementsToLoad(prop, waitDriver);
+        timeout = 20;
     }
     
     private void waitForElementsToLoad(Properties prop, WebDriverWait waitDriver) {
@@ -66,6 +68,10 @@ public class CommonPage {
 
     public String getElementText(String elementName) {
         return waitDriver.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(prop.getProperty(elementName).split("\\|")[0]))).getText();
+    }
+
+    public String getElementAttr(String elementName, String attr) {
+        return waitDriver.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(prop.getProperty(elementName).split("\\|")[0]))).getAttribute(attr);
     }
 
     public WebElement wait4Element2BeVisible(String elementName, int timeout) throws TimeoutException {
@@ -115,7 +121,14 @@ public class CommonPage {
         actions.moveToElement(element).perform();
     }
 
-    public void sleep(int time2sleep) {
+    public void scroll2Element(String elementText) {
+        WebElement element = driver.findElement(By.cssSelector(prop.getProperty(elementText).split("\\|")[0]));
+        Actions actions = new Actions(driver);
+        
+        actions.scrollToElement(element).perform();
+    }
+
+    public static void sleep(int time2sleep) {
         try {
             // Pause the current thread for 500 milliseconds (half a second)
             Thread.sleep(time2sleep);
@@ -128,4 +141,9 @@ public class CommonPage {
         }
     }
 
+    public void sendText2Element(String element, String text) {
+        String elementSelector = prop.getProperty(element).split("\\|")[0];
+        WebElement webElement = waitDriver.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(elementSelector)));
+        webElement.sendKeys(text);
+    }
 }

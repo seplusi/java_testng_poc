@@ -1,5 +1,8 @@
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
@@ -7,6 +10,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import pages.LoginPage;
+import pages.SearchResultJournal;
+import pages.SearchResultPage;
 
 public class LoginTest {
 
@@ -101,9 +106,62 @@ public class LoginTest {
     }
 
     @Test(groups = {"slow"})
-    public void aSlowTest() {
-        System.out.println("Slow test");
+    public void aSlowTest() throws TimeoutException, ParseException {
+        List<SearchResultJournal> allJournals;
+
+        System.out.println("Test searching Journals with word fuel");
+        driver.get(url);
+        LoginPage loginPage = new LoginPage(driver);
+        assert loginPage.getElementText("findHeader1").equals("Find open access journals & articles.");
+        assert loginPage.getElementText("homePageLabel").equals("DIRECTORY OF OPEN ACCESS JOURNALS");
+        assert loginPage.getElementText("journalsRadioLabel").equals("Journals");
+        assert loginPage.getElementText("articlesRadioLabel").equals("Articles");
+        loginPage.sendText2Element("inputTextBox", "fuel");
+        loginPage.clickButton("searchOptionSelectTitle");
+        loginPage.clickButton("submitButton");
+
+        SearchResultPage searchResultPage = new pages.SearchResultPage(driver);
+        searchResultPage.wait4ElementAttr2Be("searchOptionSelect", "selectedIndex", "1");
+        assert searchResultPage.getElementText("shareOrEmbed").equals("SHARE OR EMBED");
+        assert searchResultPage.getElementText("resultsTitle").matches("^[0-9]* indexed journals$");
+        assert searchResultPage.getElementText("refineSearchResults").equals("Refine search results");
+        assert searchResultPage.getElementText("sortBy").equals("Sort by");
+        searchResultPage.scroll2Element("refineSearchResultsByLanguage");
+        allJournals = searchResultPage.getAllJournalsInResuls("listJournalsResult", "fuel");
+        for (SearchResultJournal searchResultJournal : allJournals) {
+            assert searchResultJournal.getJournalName().toLowerCase().contains("fuel");
+            System.out.println(searchResultJournal.getJournalName());
+        }
     }
+
+
+    @Test(groups = {"slow"})
+    public void testSearchJournalsAndSortByLastUpdated() throws TimeoutException, ParseException {
+        List<SearchResultJournal> allJournals;
+
+        System.out.println("Test searching Journals with word fuel and ordered by last updated");
+        driver.get(url);
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.sendText2Element("inputTextBox", "fuel");
+        loginPage.clickButton("searchOptionSelectTitle");
+        loginPage.clickButton("submitButton");
+
+        SearchResultPage searchResultPage = new pages.SearchResultPage(driver);
+        searchResultPage.wait4ElementAttr2Be("searchOptionSelect", "selectedIndex", "1");
+        searchResultPage.wait4ElementAttr2Be("sortByOptionSelect", "selectedIndex", "0");
+        searchResultPage.scroll2Element("refineSearchResultsByLanguage");
+        searchResultPage.clickButton("sortByOptionSelectLastUpdated");
+        searchResultPage.wait4ElementAttr2Be("searchOptionSelect", "selectedIndex", "1");
+        searchResultPage.wait4ElementAttr2Be("sortByOptionSelect", "selectedIndex", "3");
+        searchResultPage.scroll2Element("refineSearchResultsByLanguage");
+        allJournals = searchResultPage.getAllJournalsInResuls("listJournalsResult", "fuel");
+        for (SearchResultJournal searchResultJournal : allJournals) {
+            assert searchResultJournal.getJournalName().toLowerCase().contains("fuel");
+            System.out.println(searchResultJournal.getJournalName());
+            System.out.println(searchResultJournal.getJournalLastUpdateDate());
+        }
+    }
+
 
 }
 

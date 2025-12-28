@@ -14,3 +14,9 @@ oaiDocOption = a[href="/docs/oai-pmh/"]
 aboutDropdownButton = a[id="menu-about"]|load
 aboutAboutOption = ul[aria-label="About"] a[href="/about/"]
 findHeader1 = section[class="homepage__search"] h1|load
+homePageLabel = section[class="homepage__search"] > div > p|load
+journalsRadioLabel = fieldset label[for*="journals"]|load
+articlesRadioLabel = fieldset label[for*="articles"]|load
+inputTextBox = div[class="input-group"] > input[id="keywords"]|load
+searchOptionSelectTitle = select[id="fields"] > option[value="title"]|load 
+submitButton = div[class="input-group"] button[class*="input"]|load

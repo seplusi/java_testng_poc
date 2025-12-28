@@ -7,8 +7,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import resources.objects.CommonPage;
 
 public class LoginPage extends CommonPage{
-    //private final WebElement titleElement, usernameInput, passwordInput;
-    //private final WebElement usernameLabel, passwordLabel, loginButton;
 
     public LoginPage(WebDriver driver) {
         super(driver);

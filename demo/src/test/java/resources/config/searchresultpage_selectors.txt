@@ -1,0 +1,22 @@
+logoButton = div[id="primary-nav"] a[class="logo"]|load
+tagLineText = div[id="primary-nav"] span[class*="tagline"]|load
+supportDropdownButton = a[id="action-menu-support"]|load
+applyDropdownButton = a[id="action-menu-apply"]|load
+searchButton = li[data-target="#modal-search"]|load
+searchElementImg = li[data-target="#modal-search"] > svg|load
+loginButton = li[class=""] > a[href="/account/login"]|load
+searchDropdownButton = li[class="dropdown "] a[id="menu-journals-articles"]|load
+docsDropdownButton = a[id="menu-documentation"]|load
+aboutDropdownButton = a[id="menu-about"]|load
+searchHeaderLabel = header[class="search__header"] > p|load
+searchHeadertitle = header[class="search__header"] > h1|load
+inputTextBox = header[class="search__header"] input|load
+searchOptionSelect = header[class="search__header"] select|load
+shareOrEmbed = p[id="share_embed"] > button|load
+resultsTitle = h2[id="result-count"]|load
+refineSearchResults = aside[class="filters"] > h2
+refineSearchResultsByLanguage = div[class="accordion"] > h3[id*="language"] > button
+sortBy = form[id="sort_by"] > label|load
+sortByOptionSelect = form[id="sort_by"] > select|load
+sortByOptionSelectLastUpdated = form[id="sort_by"] > select > option[value="last_manual_update asc"]
+listJournalsResult = li[class="card search-results__record"]
