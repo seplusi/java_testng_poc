@@ -42,20 +42,20 @@ public class LoginTest {
         assert loginPage.getElementText("loginButton").equals("LOGIN");
         // Test search dropdown button
         loginPage.clickButton("searchDropdownButton");
-        loginPage.wait4Element2BeVisible("journalsSearchOption", 10);
+        loginPage.wait4NumberElementsVisible("searchDropdownOptions", 2);
         assert loginPage.getElementText("journalsSearchOption").equals("Journals");
         assert loginPage.getElementText("articlesSearchOption").equals("Articles");
         loginPage.elementNotDisplayed("apiDocOption");
         // Test documentation button
         loginPage.clickButton("docsDropdownButton");
         loginPage.wait4Element2NotBeVisible("journalsSearchOption", 5);
-        loginPage.wait4Element2BeVisible("apiDocOption", 10);
+        loginPage.wait4NumberElementsVisible("docsDropdownOptions", 8);
         assert loginPage.getElementText("apiDocOption").equals("API");
         assert loginPage.getElementText("oaiDocOption").equals("OAI-PMH");
         loginPage.elementNotDisplayed("journalsSearchOption");
         // Test about dropdown button
         loginPage.clickButton("aboutDropdownButton");
-        loginPage.wait4Element2BeVisible("aboutAboutOption", 5);
+        loginPage.wait4NumberElementsVisible("aboutDropdownOptions", 8);
         loginPage.elementNotDisplayed("journalsSearchOption");
         loginPage.elementNotDisplayed("oaiDocOption");
         assert loginPage.getElementText("aboutAboutOption").equals("About DOAJ");
@@ -80,20 +80,20 @@ public class LoginTest {
         assert loginPage.getElementText("loginButton").equals("LOGIN");
         // Test search dropdown button hover
         loginPage.hover2Element("searchDropdownButton");
-        loginPage.wait4Element2BeVisible("journalsSearchOption", 10);
+        loginPage.wait4NumberElementsVisible("searchDropdownOptions", 2);
         assert loginPage.getElementText("journalsSearchOption").equals("Journals");
         assert loginPage.getElementText("articlesSearchOption").equals("Articles");
         loginPage.elementNotDisplayed("apiDocOption");
         // Test documentation button
         loginPage.hover2Element("docsDropdownButton");
         loginPage.wait4Element2NotBeVisible("journalsSearchOption", 5);
-        loginPage.wait4Element2BeVisible("apiDocOption", 10);
+        loginPage.wait4NumberElementsVisible("docsDropdownOptions", 8);
         assert loginPage.getElementText("apiDocOption").equals("API");
         assert loginPage.getElementText("oaiDocOption").equals("OAI-PMH");
         loginPage.elementNotDisplayed("journalsSearchOption");
         // Test about dropdown button
         loginPage.hover2Element("aboutDropdownButton");
-        loginPage.wait4Element2BeVisible("aboutAboutOption", 5);
+        loginPage.wait4NumberElementsVisible("aboutDropdownOptions", 8);
         loginPage.elementNotDisplayed("journalsSearchOption");
         loginPage.elementNotDisplayed("oaiDocOption");
         assert loginPage.getElementText("aboutAboutOption").equals("About DOAJ");
@@ -122,6 +122,7 @@ public class LoginTest {
 
         SearchResultPage searchResultPage = new pages.SearchResultPage(driver);
         searchResultPage.wait4ElementAttr2Be("searchOptionSelect", "selectedIndex", "1");
+        searchResultPage.wait4NumberElementsVisible("listJournalsResult", 5);
         assert searchResultPage.getElementText("shareOrEmbed").equals("SHARE OR EMBED");
         assert searchResultPage.getElementText("resultsTitle").matches("^[0-9]* indexed journals$");
         assert searchResultPage.getElementText("refineSearchResults").equals("Refine search results");
@@ -162,6 +163,25 @@ public class LoginTest {
         }
     }
 
-
+    @Test(groups = {"slow"})
+    public void testSearchJournalsWhenNoneExists() {
+        System.out.println("Test when searching Journals returns None");
+        driver.get(url);
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.sendText2Element("inputTextBox", "blahh");
+        loginPage.clickButton("searchOptionSelectTitle");
+        loginPage.clickButton("submitButton");
+        
+        SearchResultPage searchResultPage = new pages.SearchResultPage(driver);
+        searchResultPage.wait4ElementAttr2Be("searchOptionSelect", "selectedIndex", "1");
+        searchResultPage.wait4ElementAttr2Be("sortByOptionSelect", "selectedIndex", "0");
+        assert searchResultPage.getElementText("shareOrEmbed").equals("SHARE OR EMBED");
+        assert searchResultPage.getElementText("resultsTitle").matches("0 indexed journals");
+        assert searchResultPage.getElementText("refineSearchResults").equals("Refine search results");
+        assert searchResultPage.getElementText("sortBy").equals("Sort by");
+        assert searchResultPage.getElementText("sortByOptionSelect").split("\n")[0].equals("Added to DOAJ (newest first)");
+        assert searchResultPage.getElementText("noResultsText").equals("You searched for ‘blahh’ and we found no results.");
+        System.out.println("cvbnm");
+    }
 }
 

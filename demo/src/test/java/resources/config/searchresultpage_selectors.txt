@@ -20,3 +20,4 @@ sortBy = form[id="sort_by"] > label|load
 sortByOptionSelect = form[id="sort_by"] > select|load
 sortByOptionSelectLastUpdated = form[id="sort_by"] > select > option[value="last_manual_update asc"]
 listJournalsResult = li[class="card search-results__record"]
+noResultsText = li[class="alert"] p:nth-of-type(1)

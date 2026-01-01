@@ -6,12 +6,15 @@ searchButton = li[data-target="#modal-search"]|load
 searchElementImg = li[data-target="#modal-search"] > svg|load
 loginButton = li[class=""] > a[href="/account/login"]|load
 searchDropdownButton = li[class="dropdown "] a[id="menu-journals-articles"]|load
+searchDropdownOptions = ul[aria-label="Search"] > li
 journalsSearchOption = ul[aria-label="Search"] a[href="/search/journals"]
 articlesSearchOption = ul[aria-label="Search"] a[href="/search/articles"]
 docsDropdownButton = a[id="menu-documentation"]|load
+docsDropdownOptions = ul[aria-label="Documentation"] > li
 apiDocOption = a[href="/docs/api/"]
 oaiDocOption = a[href="/docs/oai-pmh/"]
 aboutDropdownButton = a[id="menu-about"]|load
+aboutDropdownOptions = ul[aria-label="About"] > li
 aboutAboutOption = ul[aria-label="About"] a[href="/about/"]
 findHeader1 = section[class="homepage__search"] h1|load
 homePageLabel = section[class="homepage__search"] > div > p|load

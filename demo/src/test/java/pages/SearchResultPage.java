@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import resources.objects.CommonPage;
 
@@ -29,7 +31,7 @@ public class SearchResultPage extends CommonPage{
                     continue;
                 }
                 sleep(500);
-            } catch (Exception e) {
+            } catch (StaleElementReferenceException e) {
                 sleep(500);
             }
         }
@@ -38,7 +40,8 @@ public class SearchResultPage extends CommonPage{
 
     public List<SearchResultJournal> getAllJournalsInResuls(String elementsText, String text) throws ParseException {
         List<SearchResultJournal> resultJournal = new ArrayList<>();
-        List<WebElement> allJournals = driver.findElements(By.cssSelector(prop.getProperty(elementsText).split("\\|")[0]));
+        List<WebElement> allJournals = waitDriver.ignoring(StaleElementReferenceException.class).until(
+            ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(prop.getProperty(elementsText).split("\\|")[0])));
 
         for (int i = 0; i < allJournals.size(); i++) {
             resultJournal.add(new SearchResultJournal(allJournals.get(i)));

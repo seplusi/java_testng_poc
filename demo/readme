@@ -1,0 +1,14 @@
+***
+*** Maven path:
+***
+Maven home: /usr/local/apache-maven-3.9.1/apache-maven-3.9.11
+
+***
+*** Create a link to mvn binary and place it in /usr/local/bin:
+***
+lrwxrwxrwx 1 root root 49 dic 31 10:23 /usr/local/bin/mvn -> ../apache-maven-3.9.1/apache-maven-3.9.11/bin/mvn
+
+***
+*** Execute the testNG tests
+***
+"/usr/local/apache-maven-3.9.1/apache-maven-3.9.11/bin/mvn" test -f "/home/luis/Documents/Projects/VSCprojects/java_testng_poc/demo/pom.xml"

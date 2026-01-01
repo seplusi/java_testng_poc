@@ -5,16 +5,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -40,7 +42,8 @@ public class CommonPage {
         for (Map.Entry<Object, Object> entry : prop.entrySet()) {
             valuesList = (String[]) ((String) entry.getValue()).split("\\|");
             if ( valuesList[valuesList.length -1].strip().equals("load") ) {
-                waitDriver.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(valuesList[0])));
+                waitDriver.ignoring(StaleElementReferenceException.class).until(
+                    ExpectedConditions.visibilityOfElementLocated(By.cssSelector(valuesList[0])));
             }
         }
     }
@@ -63,15 +66,18 @@ public class CommonPage {
     }
 
     public void clickButton(String buttonElementName) {
-        waitDriver.until(ExpectedConditions.elementToBeClickable(By.cssSelector(prop.getProperty(buttonElementName).split("\\|")[0]))).click();
+        waitDriver.ignoring(StaleElementReferenceException.class).until(
+            ExpectedConditions.elementToBeClickable(By.cssSelector(prop.getProperty(buttonElementName).split("\\|")[0]))).click();
     }
 
     public String getElementText(String elementName) {
-        return waitDriver.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(prop.getProperty(elementName).split("\\|")[0]))).getText();
+        return waitDriver.ignoring(StaleElementReferenceException.class).until(
+            ExpectedConditions.visibilityOfElementLocated(By.cssSelector(prop.getProperty(elementName).split("\\|")[0]))).getText();
     }
 
     public String getElementAttr(String elementName, String attr) {
-        return waitDriver.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(prop.getProperty(elementName).split("\\|")[0]))).getAttribute(attr);
+        return waitDriver.ignoring(StaleElementReferenceException.class).until(
+            ExpectedConditions.visibilityOfElementLocated(By.cssSelector(prop.getProperty(elementName).split("\\|")[0]))).getAttribute(attr);
     }
 
     public WebElement wait4Element2BeVisible(String elementName, int timeout) throws TimeoutException {
@@ -110,22 +116,35 @@ public class CommonPage {
 
     public void elementNotDisplayed(String elementName) {
         // Waits for an element not to be visible in the DOM
-        String elementSelector = prop.getProperty(elementName).split("\\|")[0];
-        waitDriver.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(elementSelector)));
+        waitDriver.ignoring(StaleElementReferenceException.class).until(
+            ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(prop.getProperty(elementName).split("\\|")[0]))
+        );
     }
 
     public void hover2Element(String elementToHover) {
-        WebElement element = driver.findElement(By.cssSelector(prop.getProperty(elementToHover).split("\\|")[0]));
         Actions actions = new Actions(driver);
-        
+        WebElement element = waitDriver.ignoring(StaleElementReferenceException.class).until(
+            ExpectedConditions.visibilityOfElementLocated(By.cssSelector(prop.getProperty(elementToHover).split("\\|")[0]))
+        );
         actions.moveToElement(element).perform();
     }
 
     public void scroll2Element(String elementText) {
-        WebElement element = driver.findElement(By.cssSelector(prop.getProperty(elementText).split("\\|")[0]));
-        Actions actions = new Actions(driver);
-        
-        actions.scrollToElement(element).perform();
+        int attempt = 0;
+        while ( attempt < 2) {
+            try {
+                Actions actions = new Actions(driver);
+                WebElement element = waitDriver.ignoring(StaleElementReferenceException.class).until(
+                    ExpectedConditions.visibilityOfElementLocated(By.cssSelector(prop.getProperty(elementText).split("\\|")[0]))
+                );
+                actions.scrollToElement(element).perform();
+                break;
+            } catch (StaleElementReferenceException e) {
+                System.out.println("Caught exception in scrollToElement");
+                attempt = attempt + 1;
+            }
+        }
+
     }
 
     public static void sleep(int time2sleep) {
@@ -143,7 +162,20 @@ public class CommonPage {
 
     public void sendText2Element(String element, String text) {
         String elementSelector = prop.getProperty(element).split("\\|")[0];
-        WebElement webElement = waitDriver.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(elementSelector)));
+        WebElement webElement = waitDriver.ignoring(StaleElementReferenceException.class).until(
+            ExpectedConditions.visibilityOfElementLocated(By.cssSelector(elementSelector))
+        );
         webElement.sendKeys(text);
+    }
+
+    public void wait4NumberElementsVisible(String element, int numEle) {
+        long initialTs = Instant.now().getEpochSecond();
+        while ( Instant.now().getEpochSecond() < initialTs + timeout) {
+            List<WebElement> listElements = waitDriver.ignoring(StaleElementReferenceException.class).until(
+                ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(prop.getProperty(element).split("\\|")[0]))
+            );
+            if ( listElements.size() == numEle ) { return; }
+        }
+        throw new NotFoundException("Did not find " + numEle + " of element " + element);
     }
 }
