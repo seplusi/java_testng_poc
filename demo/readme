@@ -12,3 +12,26 @@ lrwxrwxrwx 1 root root 49 dic 31 10:23 /usr/local/bin/mvn -> ../apache-maven-3.9
 *** Execute the testNG tests
 ***
 "/usr/local/apache-maven-3.9.1/apache-maven-3.9.11/bin/mvn" test -f "/home/luis/Documents/Projects/VSCprojects/java_testng_poc/demo/pom.xml"
+
+***
+*** Where to get the packages from. This gives you a version for you to configure pom.xml
+***
+https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+
+***
+*** How to get the dependency of a package.
+***
+1) Go to a package folder in maven central. For example selenium-java:
+https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+
+2) Select 4.37.0
+https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java/4.37.0
+
+3) Scroll down and search for the dependency xml code. Should be something like this:
+<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.37.0</version>
+</dependency>
+
+4) Copy and paste in the pom.xml, in the dependencies part.
