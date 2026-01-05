@@ -141,7 +141,7 @@ public class ApiGetTests {
         int totalArticls = jsonObject.getInt("total");
         int numPages = totalArticls / 100;
         int lastPageNumItems = totalArticls % 100;
-        List<Long> listLastUpdateTs = new ArrayList<Long>();
+        List<Long> listLastUpdateTs = new ArrayList<>();
         // Go through all the pages that have max page size
         for (int i = 1; i < numPages + 1; i++) {
             request = HttpRequest.newBuilder(URI.create(url + "search/articles/title:Biomass+gasification?sort=last_updated:asc&pageSize=100&page=" + i)).GET().build();
